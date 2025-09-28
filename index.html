@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implemente Agentes de IA e Autocomplete no seu PC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            width: 90%;
+            max-width: 1200px;
+            height: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 60px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #fff;
+        }
+
+        h3 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #e0e7ff;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #cbd5e1;
+            font-weight: 300;
+        }
+
+        .presenter-info {
+            text-align: center;
+            margin-top: 60px;
+            font-size: 1.2rem;
+            color: #e2e8f0;
+        }
+
+        .bullet-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 20px 0;
+        }
+
+        .bullet-list {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            padding-left: 40px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .bullet-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #60a5fa;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .highlight {
+            color: #fbbf24;
+            font-weight: 600;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .demo-section {
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 2px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .demo-section h4 {
+            color: #4ade80;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .architecture {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .cta-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #fbbf24;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .link-item {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .link-item a {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+
+            .bullet-grid,
+            .cta-grid,
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+
+        <!-- Slide 1: Abertura -->
+        <div class="slide active">
+            <h1>Implemente Agentes de IA e Autocomplete no seu PC</h1>
+            <div class="subtitle">Crie seu próprio Jarvis</div>
+            <div class="presenter-info">
+                <strong>Guilherme Severo</strong><br>
+                Tech Lead - SOMMA IT
+            </div>
+        </div>
+
+        <!-- Slide 2: Por que IA Local? -->
+        <div class="slide">
+            <h2>Por que IA Local?</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Vantagens Principais:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Privacidade Total</span> → Seus dados ficam com você</li>
+                        <li><span class="highlight">Sem Limites de Uso</span> → Rode quantas vezes quiser</li>
+                        <li><span class="highlight">Zero Custo</span> → Sem APIs pagas</li>
+                        <li><span class="highlight">Velocidade</span> → Sem latência de rede</li>
+                        <li><span class="highlight">Customização</span> → Adapte para seu workflow</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Casos de Uso:</h3>
+                    <ul class="bullet-list">
+                        <li>Code review automático</li>
+                        <li>Documentação inteligente</li>
+                        <li>Refatoração de código</li>
+                        <li>Debug assistido</li>
+                        <li>Geração de testes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Anatomia dos Modelos -->
+        <div class="slide">
+            <h2>Modelos de IA</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Conceitos Essenciais:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Parâmetros:</span> Conexões neurais do modelo (7B, 13B, 70B)</li>
+                        <li><span class="highlight">Quantização:</span> Otimização (Q4, Q8, FP16)</li>
+                        <li><span class="highlight">Context Window:</span> Quanto o modelo "lembra"</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Regra Prática:</h3>
+                    <div class="code-block">VRAM → Modelo Recomendado
+8GB          → 7B Q4
+16GB         → 13B Q4 ou 7B Q8
+32GB+        → 70B Q4 ou maiores</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Cálculo de Memória -->
+        <div class="slide">
+            <h2>Matemática dos Modelos</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>A Fórmula Básica:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">1 parâmetro = 4 bytes</span> (float32)</li>
+                        <li><span class="highlight">7 bilhões × 4 bytes = 28 GB</span></li>
+                        <li><span class="highlight">Mais overheads = ~30 GB total</span></li>
+                    </ul>
+
+                    <div class="demo-section">
+                        <h4>🧮 Calculadora Rápida:</h4>
+                        <div class="code-block">Tamanho = Parâmetros × Bytes
+
+7B × 4 = 28 GB (FP32)
+13B × 4 = 52 GB (FP32)
+70B × 4 = 280 GB (FP32)
+
+🤯 GPT-4: 1.8T × 4 = 7.2 TB!</div>
+                    </div>
+                </div>
+                <div>
+                    <h3>Por que é Problema:</h3>
+                    <ul class="bullet-list">
+                        <li>GPU consumidor: 8-24 GB VRAM</li>
+                        <li>Modelo 7B FP32: 28 GB</li>
+                        <li><span class="highlight">Não cabe!</span> 😱</li>
+                    </ul>
+
+                    <h3>A Solução:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Quantização:</span> Reduzir precisão</li>
+                        <li><span class="highlight">Menos bytes = cabe na GPU</span></li>
+                        <li>Pequena perda de qualidade</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Quantização -->
+        <div class="slide">
+            <h2>Quantização: Reduzindo Precisão</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Tipos de Quantização:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">FP32:</span> 32 bits = 4 bytes (original)</li>
+                        <li><span class="highlight">FP16:</span> 16 bits = 2 bytes (-50%)</li>
+                        <li><span class="highlight">Q8:</span> 8 bits = 1 byte (-75%)</li>
+                        <li><span class="highlight">Q4:</span> 4 bits = 0.5 bytes (-87.5%)</li>
+                    </ul>
+
+                    <h3>Qualidade vs Tamanho:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Q8:</span> Quase sem perda</li>
+                        <li><span class="highlight">Q4:</span> Boa qualidade, muito menor</li>
+                        <li><span class="highlight">Q2:</span> Existe, mas degrada muito</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>CodeLlama 7B na Prática:</h3>
+                    <div class="code-block">📊 Comparação Real:
+
+FP32: 28 GB ← Não cabe
+FP16: 14 GB ← Cabe em RTX 4090
+Q8:    7 GB ← Cabe em RTX 3080
+Q4:  3.5 GB ← Cabe em GTX 1080
+
+🎯 Sweet spot: Q4 ou Q8</div>
+
+                    <div class="demo-section">
+                        <h4>💡 Regra Prática:</h4>
+                        <p><strong>Sua VRAM ÷ 2 = Modelo máximo em Q4</strong><br>
+                        Ex: 16 GB → Modelos até 32B Q4</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: KV Cache -->
+        <div class="slide">
+            <h2>KV Cache: A Memória dos Modelos</h2>
+            <div class="subtitle">"Como os modelos 'lembram' da conversa"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>O que é KV Cache:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">K = Keys:</span> "Chaves" das palavras anteriores</li>
+                        <li><span class="highlight">V = Values:</span> "Valores" do contexto</li>
+                        <li><span class="highlight">Cache:</span> Memória temporária rápida</li>
+                        <li><span class="highlight">Evita recálculo:</span> Não processa tudo novamente</li>
+                    </ul>
+
+                    <h3>Por que é importante:</h3>
+                    <ul class="bullet-list">
+                        <li>Conversas longas = muito KV Cache</li>
+                        <li>Mais contexto = mais VRAM usada</li>
+                        <li>Limite de tokens = limite de memória</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Exemplo Prático:</h3>
+                    <div class="code-block">Context Window: 4096 tokens
+Modelo 7B Q4: ~3GB base
+
++ 1000 tokens contexto = +500MB
++ 2000 tokens contexto = +1GB
++ 4000 tokens contexto = +2GB
+
+Total: até 5GB VRAM!</div>
+
+                    <div class="demo-section">
+                        <h4>💡 Dica Prática:</h4>
+                        <p>Context window grande = mais VRAM necessária.<br>
+                        Monitore uso de memória em conversas longas!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Arsenal de Ferramentas -->
+        <div class="slide">
+            <h2>Arsenal de Ferramentas</h2>
+            <div class="subtitle">"Suas opções para rodar IA local"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Para Iniciantes:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Ollama</span> → Mais simples</li>
+                        <li><span class="highlight">LM Studio</span> → Interface gráfica amigável</li>
+                    </ul>
+
+                    <h3>Para Power Users:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">llama.cpp</span> → Máximo controle</li>
+                        <li><span class="highlight">vLLM</span> → Otimizado para produção</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="demo-section">
+                      <h3>Interface Web:</h3>
+                      <ul class="bullet-list">
+                          <li><span class="highlight">Open WebUI</span> → ChatGPT-like</li>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Autocomplete -->
+        <div class="slide">
+            <h2>Autocomplete que Funciona</h2>
+            <div class="subtitle">"Continue: O Copilot open source"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Setup no VSCode:</h3>
+                    <ul class="bullet-list">
+                        <li>1. Instalar extensão Continue</li>
+                        <li>2. Configurar modelo local</li>
+                        <li>3. Customizar para seu stack</li>
+                    </ul>
+
+                    <div class="demo-section">
+                        <h4>🎮 Demo:</h4>
+                        <p>Autocomplete local em ação</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Configuração:</h3>
+                    <div class="code-block">{
+  "models": [{
+    "title": "CodeLlama Local",
+    "provider": "ollama",
+    "model": "codellama:7b"
+  }]
+}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: CLIs -->
+        <div class="slide">
+            <h2>CLIs que Potencializam</h2>
+            <div class="subtitle">"Linha de comando turbinada"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Ferramentas Essenciais:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Claude Code</span> → Coding tasks no terminal</li>
+                        <li><span class="highlight">Gemini CLI</span> → Google's AI na linha de comando</li>
+                        <li><span class="highlight">QwenCode CLI</span> → Especializado em código</li>
+                        <li><span class="highlight">OpenCode</span> → Alternativa open source</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Workflow Produtivo:</h3>
+                    <div class="code-block"># Gerar código
+claude code "criar API REST em Python"
+
+# Documentar projeto
+gemini cli "documentar este README"
+
+# Code review
+qwen analyze main.py</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Open WebUI -->
+        <div class="slide">
+            <h2>Interface Web Profissional</h2>
+            <div class="subtitle">"Open WebUI: Seu ChatGPT privado"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Por que Open WebUI?</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Interface familiar</span> → Igual ao ChatGPT/Claude</li>
+                        <li><span class="highlight">Multi-modelos</span> → Alterne entre diferentes AIs</li>
+                        <li><span class="highlight">Conversas organizadas</span> → Histórico e contextos</li>
+                        <li><span class="highlight">Colaboração</span> → Compartilhe com equipe</li>
+                        <li><span class="highlight">Extensibilidade</span> → Plugins e customizações</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Features Destaque:</h3>
+                    <ul class="bullet-list">
+                        <li>Chat com upload de documentos</li>
+                        <li>Code highlighting automático</li>
+                        <li>Templates de prompts</li>
+                        <li>API integrada</li>
+                        <li>Modo escuro/claro</li>
+                    </ul>
+
+                    <div class="demo-section">
+                        <h4>🎯 ChatGPT vs Open WebUI</h4>
+                        <p>Mesma pergunta, velocidade local, privacidade total</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Arquitetura -->
+        <div class="slide">
+            <h2>Arquitetura</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Stack:</h3>
+                    <div class="code-block">🔧 Seu Código
+    ↓
+💻 Continue (VSCode) ← Autocomplete
+    ↓
+🌐 Open WebUI ← Interface Web
+    ↓
+⚡ CLIs + Scripts ← Automação
+    ↓
+🚀 Ollama ← Engine
+    ↓
+🤖 CodeLlama/Qwen3 ← Modelo</div>
+                </div>
+                <div>
+                    <h3>Fluxo:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Desenvolvimento:</span> Continue no VSCode</li>
+                        <li><span class="highlight">Chat/Research:</span> Open WebUI no navegador</li>
+                        <li><span class="highlight">Automação:</span> CLIs em scripts</li>
+                        <li><span class="highlight">Tudo local:</span> Ollama gerencia os modelos</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Slide 12: Casos de Uso -->
+        <div class="slide">
+            <h2>Casos de Uso Avançados</h2>
+            <div class="subtitle">"Indo além do básico"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Automações Reais:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Code Generation:</span> Gerar boilerplates</li>
+                        <li><span class="highlight">Bug Detection:</span> Análise automática</li>
+                        <li><span class="highlight">Documentation:</span> Docs que se atualizam</li>
+                        <li><span class="highlight">Code Migration:</span> Refactor inteligente</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Pipeline Completo:</h3>
+                    <div class="code-block"># Workflow integrado
+continue generate component
+gemini document --update
+claude review --security
+qwen optimize --performance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Próximos Passos -->
+        <div class="slide">
+            <h2>Próximos Passos</h2>
+            <div class="subtitle">"Seu plano de ação"</div>
+
+            <div class="cta-grid">
+                <div class="cta-item">
+                    <h4>Hoje mesmo:</h4>
+                    <ul class="bullet-list" style="font-size: 1.1rem;">
+                        <li>✅ Instalar Ollama</li>
+                        <li>✅ Baixar CodeLlama 7B</li>
+                        <li>✅ Continue no VSCode</li>
+                        <li>✅ Subir Open WebUI</li>
+                    </ul>
+                </div>
+                <div class="cta-item">
+                    <h4>Esta semana:</h4>
+                    <ul class="bullet-list" style="font-size: 1.1rem;">
+                        <li>Testar diferentes modelos</li>
+                        <li>Instalar CLIs essenciais</li>
+                        <li>Criar primeiros scripts</li>
+                    </ul>
+                </div>
+                <div class="cta-item">
+                    <h4>Próximo mês:</h4>
+                    <ul class="bullet-list" style="font-size: 1.1rem;">
+                        <li>Integrar no workflow</li>
+                        <li>Customizar para domínio</li>
+                        <li>Compartilhar com time</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Recursos -->
+        <div class="slide">
+            <h2>Recursos e Links</h2>
+            <div class="subtitle">"Para continuar a jornada"</div>
+
+            <div class="links-grid">
+                <div>
+                    <h3>Links Essenciais:</h3>
+                    <div class="link-item">
+                        <span class="emoji">🔗</span><a href="https://ollama.ai">Ollama: ollama.ai</a>
+                    </div>
+                    <div class="link-item">
+                        <span class="emoji">🌐</span><a href="https://openwebui.com">Open WebUI: openwebui.com</a>
+                    </div>
+                    <div class="link-item">
+                        <span class="emoji">⚡</span><a href="https://continue.dev">Continue: continue.dev</a>
+                    </div>
+                    <div class="link-item">
+                        <span class="emoji">🤖</span><a href="https://docs.claude.com">Claude Code: docs.claude.com</a>
+                    </div>
+                </div>
+                <div>
+                    <h3>Comunidade:</h3>
+                    <ul class="bullet-list">
+                        <li>Discord Ollama</li>
+                        <li>GitHub Continue</li>
+                        <li>Reddit r/LocalLLM</li>
+                    </ul>
+
+                    <h3>Contato:</h3>
+                    <ul class="bullet-list">
+                        <li>LinkedIn: /guilhermesevero</li>
+                        <li>GitHub: @guilhermesevero</li>
+                        <li>Email: guilherme@somma.it</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Q&A -->
+        <div class="slide">
+            <h2>Q&A + Sorteio</h2>
+            <div class="subtitle">"Suas perguntas, nossas respostas"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Perguntas Frequentes:</h3>
+                    <ul class="bullet-list">
+                        <li>"Qual hardware mínimo?"</li>
+                        <li>"Funciona offline?"</li>
+                        <li>"Como treinar modelo próprio?"</li>
+                        <li>"Integração com CI/CD?"</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🎁 Sorteios:</h3>
+                    <ul class="bullet-list">
+                        <li>Licenças JetBrains</li>
+                        <li>Ingressos TDC Experience Porto Alegre</li>
+                    </ul>
+
+                    <div style="text-align: center; margin-top: 40px; font-size: 2rem; color: #fbbf24;">
+                        Obrigado! 🚀
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Anterior</button>
+        <button class="nav-btn" onclick="nextSlide()">Próximo →</button>
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">15</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key === 'Home') {
+                showSlide(0);
+            } else if (e.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let startX = 0;
+        let startY = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!startX || !startY) return;
+
+            let endX = e.changedTouches[0].clientX;
+            let endY = e.changedTouches[0].clientY;
+
+            let diffX = startX - endX;
+            let diffY = startY - endY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 0) {
+                    nextSlide();
+                } else {
+                    previousSlide();
+                }
+            }
+
+            startX = 0;
+            startY = 0;
+        });
+    </script>
+</body>
+</html>
