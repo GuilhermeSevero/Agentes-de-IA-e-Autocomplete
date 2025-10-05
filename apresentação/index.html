@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Implemente Agentes de IA e Autocomplete no seu PC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1e293b;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            width: 95%;
+            max-width: 1400px;
+            height: 95%;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 80px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            text-align: center;
+            color: #0f172a;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 48px;
+            text-align: center;
+            color: #1e293b;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 32px;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 64px;
+            color: #475569;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
+
+        .presenter-info {
+            text-align: center;
+            margin-top: 80px;
+            font-size: 1.3rem;
+            color: #475569;
+            font-weight: 400;
+        }
+
+        .bullet-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 20px 0;
+        }
+
+        .bullet-list {
+            list-style: none;
+        }
+
+        .bullet-list li {
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.5;
+            color: #1e293b;
+        }
+
+        .bullet-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: normal;
+            font-size: 1.2rem;
+        }
+
+        .highlight {
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .code-block {
+            background: #f1f5f9;
+            border-radius: 6px;
+            padding: 32px;
+            margin: 24px 0;
+            font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 1.2rem;
+            border: 1px solid #e2e8f0;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .demo-section {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        .demo-section h4 {
+            color: #1e40af;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .architecture {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            text-align: center;
+            border: 2px solid #1e293b;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .cta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .cta-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 32px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cta-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #1e40af;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: #ffffff;
+            border: 2px solid #1e293b;
+            color: #1e293b;
+            padding: 16px 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: #1e293b;
+            border-color: #1e293b;
+            color: #ffffff;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 32px;
+            left: 32px;
+            background: #ffffff;
+            padding: 16px 24px;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            border: 2px solid #1e293b;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .link-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .link-item a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .about-me-container {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin: 40px 0;
+            justify-content: center;
+        }
+
+        .avatar-section {
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #3b82f6;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);
+        }
+
+        .about-content {
+            flex: 1;
+        }
+
+        .about-list {
+            list-style: none;
+            margin: 32px 0;
+        }
+
+        .about-list li {
+            font-size: 1.4rem;
+            margin-bottom: 24px;
+            padding-left: 0;
+            color: #1e293b;
+            line-height: 1.5;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+            color: #1e40af;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            fill: currentColor;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+                line-height: 1.1;
+            }
+            h2 {
+                font-size: 2.3rem;
+                margin-bottom: 32px;
+            }
+            h3 {
+                font-size: 1.6rem;
+                margin-bottom: 24px;
+            }
+
+            .subtitle {
+                font-size: 1.3rem;
+                margin-bottom: 48px;
+            }
+
+            .bullet-list li {
+                font-size: 1.2rem;
+                margin-bottom: 16px;
+            }
+
+            .code-block {
+                font-size: 1.1rem;
+                padding: 24px;
+            }
+
+            .bullet-grid,
+            .cta-grid,
+            .links-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .about-me-container {
+                flex-direction: column;
+                gap: 32px;
+                text-align: center;
+            }
+
+            .avatar {
+                width: 220px;
+                height: 220px;
+            }
+
+            .about-list li {
+                font-size: 1.3rem;
+            }
+
+            .navigation {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .slide-counter {
+                bottom: 20px;
+                left: 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+
+        <!-- Slide 1: Abertura -->
+        <div class="slide active">
+            <h1>Implemente Agentes de IA e Autocomplete no seu PC</h1>
+            <div class="subtitle">Crie seu próprio Jarvis</div>
+            <div class="presenter-info">
+                <strong>Guilherme Severo</strong><br>
+                Development Specialist - Somma IT
+            </div>
+        </div>
+
+        <!-- Slide 2: Sobre Mim -->
+        <div class="slide">
+            <h2>Sobre Mim</h2>
+
+            <div class="about-me-container">
+                <div class="about-content">
+                    <ul class="about-list">
+                        <li><strong>Guilherme Henrique Monteiro Severo</strong></li>
+                        <li>33 anos</li>
+                        <li>Porto Alegre/RS</li>
+                        <li>Bacharel em Ciência da Computação</li>
+                        <li>Development Specialist - Somma IT</li>
+                    </ul>
+
+                    <div class="social-links">
+                        <a href="https://github.com/GuilhermeSevero" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            /GuilhermeSevero
+                        </a>
+                        <a href="https://linkedin.com/in/guilherme-severo" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            /guilherme-severo
+                        </a>
+                        <a href="https://instagram.com/guilhermehmsevero" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                            @guilhermehmsevero
+                        </a>
+                    </div>
+                </div>
+                <div class="avatar-section">
+                    <img src="assets/avatar.jpg" alt="Guilherme Severo" class="avatar">
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Por que IA Local? -->
+        <div class="slide">
+            <h2>Por que IA Local?</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Vantagens Principais:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Privacidade Total</span> → Seus dados ficam com você</li>
+                        <li><span class="highlight">Sem Limites de Uso</span> → Rode quantas vezes quiser</li>
+                        <li><span class="highlight">Zero Custo</span> → Sem APIs pagas</li>
+                        <li><span class="highlight">Velocidade</span> → Sem latência de rede</li>
+                        <li><span class="highlight">Customização</span> → Adapte para seu workflow</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Casos de Uso:</h3>
+                    <ul class="bullet-list">
+                        <li>Code review automático</li>
+                        <li>Documentação inteligente</li>
+                        <li>Refatoração de código</li>
+                        <li>Debug assistido</li>
+                        <li>Geração de testes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Anatomia dos Modelos -->
+        <div class="slide">
+            <h2>Modelos de IA</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Conceitos Essenciais:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Parâmetros:</span> Conexões neurais do modelo (7B, 14B, 32B)</li>
+                        <li><span class="highlight">Quantização:</span> Otimização (Q4, Q8, FP16)</li>
+                        <li><span class="highlight">Context Window:</span> Quanto o modelo "lembra"</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Regra Prática:</h3>
+                    <div class="code-block">VRAM → Modelo Recomendado
+8GB          → Qwen2.5-Coder 7B Q4
+16GB         → Qwen2.5-Coder 14B Q4
+32GB+        → Qwen3Coder 30B Q4</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Cálculo de Memória -->
+        <div class="slide">
+            <h2>Matemática dos Modelos</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>A Fórmula Básica:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">1 parâmetro = 4 bytes</span> (float32)</li>
+                        <li><span class="highlight">7 bilhões × 4 bytes = 28 GB</span></li>
+                        <li><span class="highlight">Mais overheads = ~30 GB total</span></li>
+                    </ul>
+
+                    <div class="demo-section">
+                        <h4>🧮 Calculadora Rápida:</h4>
+                        <div class="code-block">Tamanho = Parâmetros × Bytes
+
+Qwen2.5-Coder 7B × 4 = 28 GB (FP32)
+Qwen2.5-Coder 14B × 4 = 56 GB (FP32)
+Qwen3Coder 30B × 4 = 120 GB (FP32)
+
+🤯 GPT-4: 1.8T × 4 = 7.2 TB!</div>
+                    </div>
+                </div>
+                <div>
+                    <h3>Por que é Problema:</h3>
+                    <ul class="bullet-list">
+                        <li>GPU consumidor: 8-24 GB VRAM</li>
+                        <li>Modelo 7B FP32: 28 GB</li>
+                        <li><span class="highlight">Não cabe!</span> 😱</li>
+                    </ul>
+
+                    <h3>A Solução:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Quantização:</span> Reduzir precisão</li>
+                        <li><span class="highlight">Menos bytes = cabe na GPU</span></li>
+                        <li>Pequena perda de qualidade</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Quantização -->
+        <div class="slide">
+            <h2>Quantização: Reduzindo Precisão</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Tipos de Quantização:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">FP32:</span> 32 bits = 4 bytes (original)</li>
+                        <li><span class="highlight">FP16:</span> 16 bits = 2 bytes (-50%)</li>
+                        <li><span class="highlight">Q8:</span> 8 bits = 1 byte (-75%)</li>
+                        <li><span class="highlight">Q4:</span> 4 bits = 0.5 bytes (-87.5%)</li>
+                    </ul>
+
+                    <h3>Qualidade vs Tamanho:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Q8:</span> Quase sem perda</li>
+                        <li><span class="highlight">Q4:</span> Boa qualidade, muito menor</li>
+                        <li><span class="highlight">Q2:</span> Existe, mas degrada muito</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Qwen2.5-Coder 7B na Prática:</h3>
+                    <div class="code-block">📊 Comparação Real:
+
+FP32: 28 GB ← Não cabe
+FP16: 15 GB ← Cabe em RTX 4090
+Q8:  8.1 GB ← Cabe em RTX 3080
+Q4:  4.7 GB ← Cabe em GTX 1080
+
+🎯 Sweet spot: Q4 ou Q8</div>
+
+                    <div class="demo-section">
+                        <h4>💡 Regra Prática:</h4>
+                        <p><strong>Sua VRAM ÷ 2 = Modelo máximo em Q4</strong><br>
+                        Ex: 16 GB → Qwen2.5-Coder 14B Q4</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: KV Cache -->
+        <div class="slide">
+            <h2>KV Cache: A Memória dos Modelos</h2>
+            <div class="subtitle">"Como os modelos 'lembram' da conversa"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>O que é KV Cache:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">K = Keys:</span> "Chaves" das palavras anteriores</li>
+                        <li><span class="highlight">V = Values:</span> "Valores" do contexto</li>
+                        <li><span class="highlight">Cache:</span> Memória temporária rápida</li>
+                        <li><span class="highlight">Evita recálculo:</span> Não processa tudo novamente</li>
+                    </ul>
+
+                    <h3>Por que é importante:</h3>
+                    <ul class="bullet-list">
+                        <li>Conversas longas = muito KV Cache</li>
+                        <li>Mais contexto = mais VRAM usada</li>
+                        <li>Limite de tokens = limite de memória</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Exemplo Prático:</h3>
+                    <div class="code-block">Context Window: 32K tokens
+Qwen2.5-Coder 7B Q4: ~4.7GB base
+
++ 8K tokens contexto = +400MB
++ 16K tokens contexto = +800MB
++ 32K tokens contexto = +1.6GB
+
+Total: até 5.1GB VRAM!</div>
+
+                    <div class="demo-section">
+                        <h4>💡 Dica Prática:</h4>
+                        <p>Context window grande = mais VRAM necessária.<br>
+                        Monitore uso de memória em conversas longas!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Arsenal de Ferramentas -->
+        <div class="slide">
+            <h2>Arsenal de Ferramentas</h2>
+            <div class="subtitle">"Suas opções para rodar IA local"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Para Iniciantes:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Ollama</span> → Mais simples</li>
+                        <li><span class="highlight">LM Studio</span> → Interface gráfica amigável</li>
+                    </ul>
+
+                    <h3>Para Power Users:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">llama.cpp</span> → Máximo controle</li>
+                        <li><span class="highlight">vLLM</span> → Otimizado para produção</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="demo-section">
+                      <h3>Interface Web:</h3>
+                      <ul class="bullet-list">
+                          <li><span class="highlight">Open WebUI</span> → ChatGPT-like</li>
+                      </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Instalando Ollama -->
+        <div class="slide">
+            <h2>Instalando Ollama</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Linux (Nativo):</h3>
+                    <div class="code-block"># Instalação rápida
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Download do modelo
+ollama pull qwen2.5-coder:7b
+
+# Testar
+ollama run qwen2.5-coder:7b</div>
+
+                    <div class="demo-section">
+                        <h4>✅ Vantagens Linux Nativo:</h4>
+                        <p>Máxima performance • GPU direto • Menos overhead</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Docker (Qualquer SO):</h3>
+                    <div class="code-block"># CPU Only:
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+
+# Nvidia GPU:
+docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+
+# AMD GPU:
+docker run -d --device /dev/kfd --device /dev/dri -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama:rocm
+
+# Baixar modelo:
+docker exec -it ollama ollama pull qwen2.5-coder:7b</div>
+
+                    <div class="demo-section">
+                        <h4>🐳 Vantagens Docker:</h4>
+                        <p>Isolamento • Portabilidade • Fácil backup</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Autocomplete -->
+        <div class="slide">
+            <h2>Autocomplete que Funciona</h2>
+            <div class="subtitle">"Continue: O Copilot open source"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Setup no VSCode:</h3>
+                    <ul class="bullet-list">
+                        <li>1. Instalar extensão Continue</li>
+                        <li>2. Configurar modelo local</li>
+                        <li>3. Customizar para seu stack</li>
+                    </ul>
+
+                    <div class="demo-section">
+                        <h4>🎮 Demo:</h4>
+                        <p>Autocomplete local em ação</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Configuração:</h3>
+                    <div class="code-block">
+name: my-local-configuration
+version: 0.0.1
+schema: v1
+
+models:
+  - name: "Ollama Local"
+    model: "AUTODETECT"
+    provider: "ollama"
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: CLIs -->
+        <div class="slide">
+            <h2>CLIs que Potencializam</h2>
+            <div class="subtitle">"Linha de comando turbinada"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Mais conhecidos:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Claude Code</span> → Mais maduro e consolidado</li>
+                        <li><span class="highlight">Codex</span> → Vem ganhando espaço (OpenAI)</li>
+                        <li><span class="highlight">Gemini CLI</span> → CLI open source com uso Free (Pro/Flash)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Alternativas OpenSource:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Qwen Code</span> → Especializado em código</li>
+                        <li><span class="highlight">Forge Code</span> → Muito rápido e integrado ao terminal</li>
+                        <li><span class="highlight">OpenCode</span> → Alternativa open source</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Claude Code -->
+        <div class="slide">
+            <h2>Claude Code</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Principais Features:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Agentic Mode:</span> Executa tarefas complexas automaticamente</li>
+                        <li><span class="highlight">MCP Servers:</span> Conecta com ferramentas externas</li>
+                        <li><span class="highlight">Slash Commands:</span> Comandos customizáveis</li>
+                        <li><span class="highlight">Context-Aware:</span> Entende seu projeto inteiro</li>
+                    </ul>
+
+                    <div class="demo-section">
+                        <h4># Instalação:</h4>
+                        <p>npm install -g @anthropic-ai/claude-code</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Uso:</h3>
+                    <div class="code-block"># Modo interativo (padrão)
+claude
+
+# Print direto (pipes/scripts)
+claude -p "criar API REST em Python"
+
+# Continuar última conversa
+claude -c "adicione validação de email"
+
+# Escolher modelo específico
+claude --model opus "otimizar performance"
+
+# MCP servers customizados
+claude --mcp-config ./mcp-servers.json</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Codex CLI -->
+        <div class="slide">
+            <h2>Codex CLI</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Características:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">GPT-5:</span> Modelo mais avançado da OpenAI</li>
+                        <li><span class="highlight">APIs Externas:</span> Também modelos locais</li>
+                    </ul>
+
+                    <h3>Usando APIs Externas:</h3>
+                    <ul class="bullet-list">
+                        <li>Conecte com Ollama via API OpenAI-compatible</li>
+                        <li>Ou use proxy compatível (OpenRouter)</li>
+                    </ul>
+                    <div class="demo-section">
+                        <h4># Instalação:</h4>
+                        <p>npm install -g @openai/codex</p>
+
+                        <br/>
+
+                        <h4># Uso:</h4>
+                        <p>codex -c model_provider=openrouter -m z-ai/glm-4.6</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Setup (~/.codex/config.toml):</h3>
+                    <div class="code-block"># Usando Ollama (local)
+[model_providers.ollama]
+name = "Ollama"
+base_url = "http://localhost:11434/v1"
+
+# Usando Proxy (OpenAI-compatible)
+[model_providers.openrouter]
+name = "OpenRouter"
+base_url = "https://openrouter.ai/api/v1"
+env_key = "OPENROUTER_API_KEY"
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Gemini CLI -->
+        <div class="slide">
+            <h2>Gemini CLI</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Vantagens:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Free Tier:</span> 60 requests/min e 1.000 requests/dia</li>
+                        <li><span class="highlight">Custom Commands:</span> Crie seus próprios comandos</li>
+                        <li><span class="highlight">Multi-modal:</span> Texto, imagem, código</li>
+                        <li><span class="highlight">Context Window:</span> Gemini 2.5 Pro com context window de 1M token</li>
+                    </ul>
+                    <div class="demo-section">
+                        <h4># Instalação:</h4>
+                        <p>npm install -g @google/gemini-cli</p>
+
+                        <br/>
+
+                        <h4># Uso:</h4>
+                        <p>gemini</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Como Criar Comandos:</h3>
+                    <h4>(~/.gemini/commands/git/commit.toml)</h4>
+                    <div class="code-block"># In: <project>description = "Generates a Git commit message based on staged changes."
+
+# The prompt uses !{...} to execute the command and inject its output.
+prompt = """
+Please generate a Conventional Commit message based on the following git diff:
+
+```diff
+!{git diff --staged}
+```
+"""
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: QwenCode CLI -->
+        <div class="slide">
+            <h2>QwenCode CLI</h2>
+            <div class="subtitle">"Fork do Gemini CLI otimizado para Qwen-Coder models"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Vantagens:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Free Tier:</span> 60 requests/min e 2.000 requests/dia</li>
+                        <li><span class="highlight">Custom Commands:</span> Crie seus próprios comandos</li>
+                        <li><span class="highlight">APIs Externas:</span> Também modelos locais</li>
+                    </ul>
+                    <div class="demo-section">
+                        <h4># Instalação:</h4>
+                        <p>npm install -g @qwen-code/qwen-code@latest</p>
+
+                        <br/>
+
+                        <h4># Uso:</h4>
+                        <p>qwen</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Setup:</h3>
+                    <div class="code-block"># Environment variables
+export OPENAI_API_KEY="your_api_key_here"
+export OPENAI_BASE_URL="your_api_endpoint"
+export OPENAI_MODEL="your_model_choice"
+                    </div>
+                    <div>
+                        <h3>Diferenças do Gemini CLI:</h3>
+                        <ul class="bullet-list">
+                            <li><span class="highlight">100% Local:</span> Foca em modelos Qwen3 Open Source</li>
+                            <li><span class="highlight">Code-First:</span> Otimizado para código</li>
+                            <li><span class="highlight">Features:</span> Maioria das features do Gemini estão presentes</li>
+                            <li><span class="highlight">Setup:</span> Configurações parte da pasta "~/.qwen"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Forge Code -->
+        <div class="slide">
+            <h2>Forge Code</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Características:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Super Rápido:</span> Escrito em Rust</li>
+                        <li><span class="highlight">Terminal-Native:</span> TUI interativa</li>
+                        <li><span class="highlight">Multi-Agent Architecture:</span> Muse e Forge</li>
+                        <li><span class="highlight">/muse:</span> Modo de planejamento e review</li>
+                        <li><span class="highlight">/forge:</span> Modo de execução de mudanças</li>
+                    </ul>
+                    <div class="demo-section">
+                        <h4># Instalação:</h4>
+                        <p>npm install -g forgecode@latest</p>
+
+                        <br/>
+
+                        <h4># Uso:</h4>
+                        <p>forge</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Setup:</h3>
+                    <div class="code-block"># OpenRouter (recommended for model variety)
+OPENROUTER_API_KEY=your_openrouter_key_here
+
+# Official OpenAI
+OPENAI_API_KEY=your_openai_key_here
+
+# Official Anthropic
+ANTHROPIC_API_KEY=your_anthropic_key_here
+
+# OpenAI-Compatible Providers
+OPENAI_URL=your_provider_url
+OPENAI_API_KEY=your_provider_api_key
+                    </div>
+                    <div class="demo-section">
+                        <h4>⚡ Destaque:</h4>
+                        <p>Integração perfeita com Git + execução de comandos shell</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Open WebUI -->
+        <div class="slide">
+            <h2>Interface Web Profissional</h2>
+            <div class="subtitle">"Open WebUI: Seu ChatGPT privado"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Por que Open WebUI?</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Interface familiar</span> → Igual ao ChatGPT/Claude</li>
+                        <li><span class="highlight">Multi-modelos</span> → Alterne entre diferentes AIs</li>
+                        <li><span class="highlight">Conversas organizadas</span> → Histórico e contextos</li>
+                        <li><span class="highlight">Colaboração</span> → Compartilhe com equipe</li>
+                        <li><span class="highlight">Extensibilidade</span> → Plugins e customizações</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Features Destaque:</h3>
+                    <ul class="bullet-list">
+                        <li>Chat com upload de documentos</li>
+                        <li>Code highlighting automático</li>
+                        <li>Templates de prompts</li>
+                        <li>API integrada</li>
+                        <li>Modo escuro/claro</li>
+                    </ul>
+
+                    <div class="demo-section">
+                        <h4>🎯 ChatGPT vs Open WebUI</h4>
+                        <p>Mesma pergunta, velocidade local, privacidade total</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Arquitetura -->
+        <div class="slide">
+            <h2>Arquitetura</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Stack:</h3>
+                    <div class="code-block">🔧 Seu Código
+    ↓
+💻 Continue (VSCode) ← Autocomplete
+    ↓
+🌐 Open WebUI ← Interface Web
+    ↓
+⚡ CLIs + Scripts ← Automação
+    ↓
+🚀 Ollama ← Engine
+    ↓
+🤖 Qwen2.5-Coder/Qwen3Coder ← Modelo</div>
+                </div>
+                <div>
+                    <h3>Fluxo:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Desenvolvimento:</span> Continue no VSCode</li>
+                        <li><span class="highlight">Chat/Research:</span> Open WebUI no navegador</li>
+                        <li><span class="highlight">Automação:</span> CLIs em scripts</li>
+                        <li><span class="highlight">Tudo local:</span> Ollama gerencia os modelos</li>
+                    </ul>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Slide 19: Casos de Uso -->
+        <div class="slide">
+            <h2>Casos de Uso Avançados</h2>
+            <div class="subtitle">"Indo além do básico"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Automações Reais:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Code Generation:</span> Gerar boilerplates</li>
+                        <li><span class="highlight">Bug Detection:</span> Análise automática</li>
+                        <li><span class="highlight">Documentation:</span> Docs que se atualizam</li>
+                        <li><span class="highlight">Code Migration:</span> Refactor inteligente</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Pipeline Completo:</h3>
+                    <div class="code-block"># Workflow integrado
+continue generate component
+gemini document --update
+claude review --security
+qwen-coder optimize --performance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Obrigado -->
+        <div class="slide">
+            <h1>Obrigado!</h1>
+            <div class="subtitle">Perguntas?</div>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 40px; margin: 60px 0;">
+                <div class="cta-item" style="text-align: center; min-width: 600px;">
+                    <h4>💬 Contato</h4>
+                    <div class="social-links">
+                        <a href="https://github.com/GuilhermeSevero" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.30.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                            /GuilhermeSevero
+                        </a>
+                        <a href="https://linkedin.com/in/guilherme-severo" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            /guilherme-severo
+                        </a>
+                        <a href="https://instagram.com/guilhermehmsevero" class="social-link">
+                            <svg class="social-icon" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.40s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                            @guilhermehmsevero
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="presenter-info">
+                <strong>Guilherme Severo</strong><br>
+                Development Specialist - Somma IT
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Anterior</button>
+        <button class="nav-btn" onclick="nextSlide()">Próximo →</button>
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">20</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+
+            // Prevent cycling - stop at first and last slides
+            if (n < 0) {
+                currentSlide = 0;
+            } else if (n >= totalSlides) {
+                currentSlide = totalSlides - 1;
+            } else {
+                currentSlide = n;
+            }
+
+            slides[currentSlide].classList.add('active');
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key === 'Home') {
+                showSlide(0);
+            } else if (e.key === 'End') {
+                showSlide(totalSlides - 1);
+            }
+        });
+
+        // Touch/swipe support for mobile
+        let startX = 0;
+        let startY = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!startX || !startY) return;
+
+            let endX = e.changedTouches[0].clientX;
+            let endY = e.changedTouches[0].clientY;
+
+            let diffX = startX - endX;
+            let diffY = startY - endY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 0) {
+                    nextSlide();
+                } else {
+                    previousSlide();
+                }
+            }
+
+            startX = 0;
+            startY = 0;
+        });
+    </script>
+</body>
+</html>
