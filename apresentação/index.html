@@ -390,7 +390,7 @@
 
         <!-- Slide 1: Abertura -->
         <div class="slide active">
-            <h1>Implemente Agentes de IA e Autocomplete no seu PC</h1>
+            <h1>Agentes de IA e Autocomplete no seu PC</h1>
             <div class="subtitle">Crie seu próprio Jarvis</div>
             <div class="presenter-info">
                 <strong>Guilherme Severo</strong><br>
@@ -439,7 +439,106 @@
             </div>
         </div>
 
-        <!-- Slide 3: Por que IA Local? -->
+        <!-- Slide 3: Introdução - IA, Models e LLM -->
+        <div class="slide">
+            <h2>IA, Modelos e LLMs</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>O que é IA?</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Inteligência Artificial:</span> Sistemas que simulam capacidades humanas</li>
+                        <li><span class="highlight">Machine Learning:</span> Aprende com dados</li>
+                        <li><span class="highlight">Deep Learning:</span> Redes neurais profundas</li>
+                    </ul>
+
+                    <h3>LLM - Large Language Model:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Modelo de Linguagem:</span> Entende e gera texto</li>
+                        <li><span class="highlight">Treinado em bilhões de textos:</span> Livros, código, web</li>
+                        <li><span class="highlight">Transformer:</span> Arquitetura neural moderna</li>
+                    </ul>
+
+                    <h3>Modelo vs LLM:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Modelo:</span> Qualquer rede neural treinada</li>
+                        <li><span class="highlight">LLM:</span> Modelo específico para linguagem (Large Language Model)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Como Funciona um LLM?</h3>
+                    <div class="code-block">1. Input (Prompt)
+   ↓
+2. Tokenização
+   ↓
+3. Processamento Neural
+   ↓
+4. Predição de próxima palavra
+   ↓
+5. Output (Resposta)</div>
+
+                    <div class="demo-section">
+                        <h4>🤖 Exemplos de LLMs:</h4>
+                        <p><strong>Proprietários:</strong> GPT-5, Sonnet, Gemini<br>
+                        <strong>Open Source:</strong> Llama, Qwen, Mistral, Gemma</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Conceitos Práticos -->
+        <div class="slide">
+            <h2>Conceitos Práticos</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>1. Tokens:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Tokens:</span> "Palavras" que o modelo entende</li>
+                        <li>Texto é quebrado em pedaços menores</li>
+                        <li>32K tokens ≈ 24 mil palavras</li>
+                    </ul>
+
+                    <h3>2. Temperatura:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">0.0:</span> Preciso, determinístico (código, math)</li>
+                        <li><span class="highlight">0.7-1.0:</span> Criativo, variado (brainstorm)</li>
+                    </ul>
+
+                    <h3>3. Fine-tuning:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Base model:</span> Conhecimento geral</li>
+                        <li><span class="highlight">Fine-tuned:</span> Especializado (ex: Qwen-Coder)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>4. Treinamento vs Inferência:</h3>
+                    <div class="code-block">Treinamento (não fazemos):
+• Criar modelo do zero
+• Supercomputadores
+• Semanas/meses
+• $$$ milhões
+
+Inferência (fazemos local):
+• Usar modelo pronto
+• Seu PC/GPU
+• Instantâneo
+• Gratuito</div>
+
+                    <h3>5. Prompt Engineering:</h3>
+                    <div class="demo-section">
+                        <h4>❌ Ruim:</h4>
+                        <p>"Me ajuda com código"</p>
+
+                        <h4>✅ Bom:</h4>
+                        <p>"Crie função Python para validar email com regex. Inclua docstring e tratamento de erros."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Por que IA Local? -->
         <div class="slide">
             <h2>Por que IA Local?</h2>
 
@@ -467,7 +566,7 @@
             </div>
         </div>
 
-        <!-- Slide 4: Anatomia dos Modelos -->
+        <!-- Slide 6: Anatomia dos Modelos -->
         <div class="slide">
             <h2>Modelos de IA</h2>
 
@@ -490,7 +589,7 @@
             </div>
         </div>
 
-        <!-- Slide 5: Cálculo de Memória -->
+        <!-- Slide 7: Cálculo de Memória -->
         <div class="slide">
             <h2>Matemática dos Modelos</h2>
 
@@ -532,7 +631,7 @@ Qwen3Coder 30B × 4 = 120 GB (FP32)
             </div>
         </div>
 
-        <!-- Slide 6: Quantização -->
+        <!-- Slide 8: Quantização -->
         <div class="slide">
             <h2>Quantização: Reduzindo Precisão</h2>
 
@@ -573,7 +672,7 @@ Q4:  4.7 GB ← Cabe em GTX 1080
             </div>
         </div>
 
-        <!-- Slide 7: KV Cache -->
+        <!-- Slide 9: KV Cache -->
         <div class="slide">
             <h2>KV Cache: A Memória dos Modelos</h2>
             <div class="subtitle">"Como os modelos 'lembram' da conversa"</div>
@@ -615,7 +714,7 @@ Total: até 5.1GB VRAM!</div>
             </div>
         </div>
 
-        <!-- Slide 8: Arsenal de Ferramentas -->
+        <!-- Slide 10: Arsenal de Ferramentas -->
         <div class="slide">
             <h2>Arsenal de Ferramentas</h2>
             <div class="subtitle">"Suas opções para rodar IA local"</div>
@@ -645,7 +744,7 @@ Total: até 5.1GB VRAM!</div>
             </div>
         </div>
 
-        <!-- Slide 9: Instalando Ollama -->
+        <!-- Slide 11: Instalando Ollama -->
         <div class="slide">
             <h2>Instalando Ollama</h2>
 
@@ -688,7 +787,7 @@ docker exec -it ollama ollama pull qwen2.5-coder:7b</div>
             </div>
         </div>
 
-        <!-- Slide 10: Autocomplete -->
+        <!-- Slide 12: Autocomplete -->
         <div class="slide">
             <h2>Autocomplete que Funciona</h2>
             <div class="subtitle">"Continue: O Copilot open source"</div>
@@ -728,246 +827,7 @@ models:
             </div>
         </div>
 
-        <!-- Slide 10: CLIs -->
-        <div class="slide">
-            <h2>CLIs que Potencializam</h2>
-            <div class="subtitle">"Linha de comando turbinada"</div>
-
-            <div class="bullet-grid">
-                <div>
-                    <h3>Mais conhecidos:</h3>
-                    <ul class="bullet-list">
-                        <li><span class="highlight">Claude Code</span> → Mais maduro e consolidado</li>
-                        <li><span class="highlight">Codex</span> → Vem ganhando espaço (OpenAI)</li>
-                        <li><span class="highlight">Gemini CLI</span> → CLI open source com uso Free (Pro/Flash)</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3>Alternativas OpenSource:</h3>
-                    <ul class="bullet-list">
-                        <li><span class="highlight">Qwen Code</span> → Especializado em código</li>
-                        <li><span class="highlight">Forge Code</span> → Muito rápido e integrado ao terminal</li>
-                        <li><span class="highlight">OpenCode</span> → Alternativa open source</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 12: Claude Code -->
-        <div class="slide">
-            <h2>Claude Code</h2>
-
-            <div class="bullet-grid">
-                <div>
-                    <h3>Principais Features:</h3>
-                    <ul class="bullet-list">
-                        <li><span class="highlight">Agentic Mode:</span> Executa tarefas complexas automaticamente</li>
-                        <li><span class="highlight">MCP Servers:</span> Conecta com ferramentas externas</li>
-                        <li><span class="highlight">Slash Commands:</span> Comandos customizáveis</li>
-                        <li><span class="highlight">Context-Aware:</span> Entende seu projeto inteiro</li>
-                    </ul>
-
-                    <div class="demo-section">
-                        <h4># Instalação:</h4>
-                        <p>npm install -g @anthropic-ai/claude-code</p>
-                    </div>
-                </div>
-                <div>
-                    <h3>Uso:</h3>
-                    <div class="code-block"># Modo interativo (padrão)
-claude
-
-# Print direto (pipes/scripts)
-claude -p "criar API REST em Python"
-
-# Continuar última conversa
-claude -c "adicione validação de email"
-
-# Escolher modelo específico
-claude --model opus "otimizar performance"
-
-# MCP servers customizados
-claude --mcp-config ./mcp-servers.json</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 13: Codex CLI -->
-        <div class="slide">
-            <h2>Codex CLI</h2>
-
-            <div class="bullet-grid">
-                <div>
-                    <h3>Características:</h3>
-                    <ul class="bullet-list">
-                        <li><span class="highlight">GPT-5:</span> Modelo mais avançado da OpenAI</li>
-                        <li><span class="highlight">APIs Externas:</span> Também modelos locais</li>
-                    </ul>
-
-                    <h3>Usando APIs Externas:</h3>
-                    <ul class="bullet-list">
-                        <li>Conecte com Ollama via API OpenAI-compatible</li>
-                        <li>Ou use proxy compatível (OpenRouter)</li>
-                    </ul>
-                    <div class="demo-section">
-                        <h4># Instalação:</h4>
-                        <p>npm install -g @openai/codex</p>
-
-                        <br/>
-
-                        <h4># Uso:</h4>
-                        <p>codex -c model_provider=openrouter -m z-ai/glm-4.6</p>
-                    </div>
-                </div>
-                <div>
-                    <h3>Setup (~/.codex/config.toml):</h3>
-                    <div class="code-block"># Usando Ollama (local)
-[model_providers.ollama]
-name = "Ollama"
-base_url = "http://localhost:11434/v1"
-
-# Usando Proxy (OpenAI-compatible)
-[model_providers.openrouter]
-name = "OpenRouter"
-base_url = "https://openrouter.ai/api/v1"
-env_key = "OPENROUTER_API_KEY"
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 14: Gemini CLI -->
-        <div class="slide">
-            <h2>Gemini CLI</h2>
-
-            <div class="bullet-grid">
-                <div>
-                    <h3>Vantagens:</h3>
-                    <ul class="bullet-list">
-                        <li><span class="highlight">Free Tier:</span> 60 requests/min e 1.000 requests/dia</li>
-                        <li><span class="highlight">Custom Commands:</span> Crie seus próprios comandos</li>
-                        <li><span class="highlight">Multi-modal:</span> Texto, imagem, código</li>
-                        <li><span class="highlight">Context Window:</span> Gemini 2.5 Pro com context window de 1M token</li>
-                    </ul>
-                    <div class="demo-section">
-                        <h4># Instalação:</h4>
-                        <p>npm install -g @google/gemini-cli</p>
-
-                        <br/>
-
-                        <h4># Uso:</h4>
-                        <p>gemini</p>
-                    </div>
-                </div>
-                <div>
-                    <h3>Como Criar Comandos:</h3>
-                    <h4>(~/.gemini/commands/git/commit.toml)</h4>
-                    <div class="code-block"># In: <project>description = "Generates a Git commit message based on staged changes."
-
-# The prompt uses !{...} to execute the command and inject its output.
-prompt = """
-Please generate a Conventional Commit message based on the following git diff:
-
-```diff
-!{git diff --staged}
-```
-"""
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 15: QwenCode CLI -->
-        <div class="slide">
-            <h2>QwenCode CLI</h2>
-            <div class="subtitle">"Fork do Gemini CLI otimizado para Qwen-Coder models"</div>
-
-            <div class="bullet-grid">
-                <div>
-                    <h3>Vantagens:</h3>
-                    <ul class="bullet-list">
-                        <li><span class="highlight">Free Tier:</span> 60 requests/min e 2.000 requests/dia</li>
-                        <li><span class="highlight">Custom Commands:</span> Crie seus próprios comandos</li>
-                        <li><span class="highlight">APIs Externas:</span> Também modelos locais</li>
-                    </ul>
-                    <div class="demo-section">
-                        <h4># Instalação:</h4>
-                        <p>npm install -g @qwen-code/qwen-code@latest</p>
-
-                        <br/>
-
-                        <h4># Uso:</h4>
-                        <p>qwen</p>
-                    </div>
-                </div>
-                <div>
-                    <h3>Setup:</h3>
-                    <div class="code-block"># Environment variables
-export OPENAI_API_KEY="your_api_key_here"
-export OPENAI_BASE_URL="your_api_endpoint"
-export OPENAI_MODEL="your_model_choice"
-                    </div>
-                    <div>
-                        <h3>Diferenças do Gemini CLI:</h3>
-                        <ul class="bullet-list">
-                            <li><span class="highlight">100% Local:</span> Foca em modelos Qwen3 Open Source</li>
-                            <li><span class="highlight">Code-First:</span> Otimizado para código</li>
-                            <li><span class="highlight">Features:</span> Maioria das features do Gemini estão presentes</li>
-                            <li><span class="highlight">Setup:</span> Configurações parte da pasta "~/.qwen"</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 16: Forge Code -->
-        <div class="slide">
-            <h2>Forge Code</h2>
-
-            <div class="bullet-grid">
-                <div>
-                    <h3>Características:</h3>
-                    <ul class="bullet-list">
-                        <li><span class="highlight">Super Rápido:</span> Escrito em Rust</li>
-                        <li><span class="highlight">Terminal-Native:</span> TUI interativa</li>
-                        <li><span class="highlight">Multi-Agent Architecture:</span> Muse e Forge</li>
-                        <li><span class="highlight">/muse:</span> Modo de planejamento e review</li>
-                        <li><span class="highlight">/forge:</span> Modo de execução de mudanças</li>
-                    </ul>
-                    <div class="demo-section">
-                        <h4># Instalação:</h4>
-                        <p>npm install -g forgecode@latest</p>
-
-                        <br/>
-
-                        <h4># Uso:</h4>
-                        <p>forge</p>
-                    </div>
-                </div>
-                <div>
-                    <h3>Setup:</h3>
-                    <div class="code-block"># OpenRouter (recommended for model variety)
-OPENROUTER_API_KEY=your_openrouter_key_here
-
-# Official OpenAI
-OPENAI_API_KEY=your_openai_key_here
-
-# Official Anthropic
-ANTHROPIC_API_KEY=your_anthropic_key_here
-
-# OpenAI-Compatible Providers
-OPENAI_URL=your_provider_url
-OPENAI_API_KEY=your_provider_api_key
-                    </div>
-                    <div class="demo-section">
-                        <h4>⚡ Destaque:</h4>
-                        <p>Integração perfeita com Git + execução de comandos shell</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 17: Open WebUI -->
+        <!-- Slide 13: Open WebUI -->
         <div class="slide">
             <h2>Interface Web Profissional</h2>
             <div class="subtitle">"Open WebUI: Seu ChatGPT privado"</div>
@@ -1001,66 +861,263 @@ OPENAI_API_KEY=your_provider_api_key
             </div>
         </div>
 
+        <!-- Slide 14: CLIs -->
+        <div class="slide">
+            <h2>CLIs que Potencializam</h2>
+            <div class="subtitle">"Linha de comando turbinada"</div>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Mais conhecidos:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Claude Code</span> → Mais maduro e consolidado</li>
+                        <li><span class="highlight">Codex</span> → Vem ganhando espaço (OpenAI)</li>
+                        <li><span class="highlight">Gemini CLI</span> → CLI open source com uso Free (Pro/Flash)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Alternativas OpenSource:</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Qwen Code</span> → Especializado em código</li>
+                        <li><span class="highlight">Forge Code</span> → Muito rápido e integrado ao terminal</li>
+                        <li><span class="highlight">OpenCode</span> → Alternativa open source</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: CLIs Oficiais (Claude & Codex) -->
+        <div class="slide">
+            <h2>Claude Code & Codex</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Claude Code (Anthropic):</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Agentic Mode:</span> Executa tarefas complexas</li>
+                        <li><span class="highlight">MCP Servers:</span> Conecta ferramentas externas</li>
+                        <li><span class="highlight">Slash Commands:</span> Comandos customizáveis</li>
+                        <li><span class="highlight">Context-Aware:</span> Entende projeto inteiro</li>
+                    </ul>
+
+                    <div class="code-block"># Instalação
+npm install -g @anthropic-ai/claude-code
+
+# Modo interativo (padrão)
+claude</div>
+
+                    <div class="demo-section">
+                        <h4>💰 Custo:</h4>
+                        <p>A partir de $20.00 - Claude Pro</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Codex (OpenAI):</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">GPT-5:</span> Modelo avançado</li>
+                        <li><span class="highlight">Multi-API:</span> OpenAI, Ollama, proxies</li>
+                    </ul>
+
+                    <div class="code-block"># Instalação
+npm install -g @openai/codex
+
+# Config (~/.codex/config.toml)
+[model_providers.ollama]
+base_url = "http://localhost:11434/v1"
+
+# Usando Proxy (OpenAI-compatible)
+[model_providers.openrouter]
+base_url = "https://openrouter.ai/api/v1"
+env_key = "OPENROUTER_API_KEY"
+
+# Uso
+codex -c model_provider=ollama -m gpt-oss:20b</div>
+
+                    <div class="demo-section">
+                        <h4>💰 Custo:</h4>
+                        <p>A partir de $20.00 - ChatGPT Plus</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Slide 16: CLIs Open Source (Gemini & QwenCode) -->
+        <div class="slide">
+            <h2>Gemini & QwenCode</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Gemini CLI (Google):</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Free Tier:</span> 60 req/min, 1K req/dia</li>
+                        <li><span class="highlight">Custom Commands:</span> Scripts personalizados</li>
+                        <li><span class="highlight">Multi-modal:</span> Texto, imagem, código</li>
+                        <li><span class="highlight">1M tokens:</span> Context window gigante</li>
+                    </ul>
+
+                    <div class="code-block"># Instalação
+npm install -g @google/gemini-cli
+
+# Custom command (~/.gemini/commands/review.toml)
+prompt = """
+Analise este código:
+- Performance
+- Segurança
+- Boas práticas
+"""
+
+# Uso
+gemini review main.py</div>
+                </div>
+                <div>
+                    <h3>QwenCode CLI (Fork Gemini):</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Code-First:</span> Otimizado para código</li>
+                        <li><span class="highlight">Free Tier:</span> 60 req/min, 2K req/dia</li>
+                        <li><span class="highlight">100% Local:</span> Foca em Qwen</li>
+                        <li><span class="highlight">Custom Commands:</span> Mesmo do Gemini</li>
+                    </ul>
+
+                    <div class="code-block"># Instalação
+npm install -g @qwen-code/qwen-code@latest
+
+# Setup (env vars ou ~/.qwen/config)
+OPENAI_BASE_URL="http://localhost:11434/v1"
+OPENAI_MODEL="qwen2.5-coder:7b"
+OPENAI_API_KEY="your_api_key_here"
+
+# Modo interativo
+qwen</div>
+
+                    <div class="demo-section">
+                        <h4>🎯 Quando usar:</h4>
+                        <p><strong>Gemini:</strong> Multi-modal, Google API<br>
+                        <strong>QwenCode:</strong> 100% local, privacidade total</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Forge Code -->
+        <div class="slide">
+            <h2>Forge Code</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Por que Forge?</h3>
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Super Rápido:</span> Escrito em Rust</li>
+                        <li><span class="highlight">Multi-Agent:</span> Muse (plan) + Forge (execute)</li>
+                        <li><span class="highlight">Terminal TUI:</span> Interface interativa no terminal</li>
+                    </ul>
+
+                    <div class="demo-section">
+                        <h4># Instalação:</h4>
+                        <p>npm install -g forgecode@latest</p>
+                        <br/>
+
+                        <h4># Modo interativo</h4>
+                        <p>forge</p>
+                        <br/>
+
+                        <h4># Agentes especializados</h4>
+                        <p>/muse   # Planejamento e review</p>
+                        <p>/forge  # Execução de mudanças</p>
+                    </div>
+                </div>
+                <div>
+                    <h3>Setup:</h3>
+                    <div class="code-block"># Setup APIs (OpenRouter recomendado)
+OPENROUTER_API_KEY=sk-...
+
+# Official OpenAI
+OPENAI_API_KEY=your_openai_key_here
+
+# Official Anthropic
+ANTHROPIC_API_KEY=your_anthropic_key_here
+
+# OpenAI-Compatible Providers
+OPENAI_URL=your_provider_url
+OPENAI_API_KEY=your_provider_api_key
+                    </div>
+
+                    <h3>Casos de Uso:</h3>
+                    <ul class="bullet-list">
+                        <li>Git commits automáticos com contexto</li>
+                        <li>Code review antes de commit</li>
+                        <li>Geração de PRs com descrição detalhada</li>
+                        <li>Análise de diffs complexos</li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
         <!-- Slide 18: Arquitetura -->
         <div class="slide">
-            <h2>Arquitetura</h2>
+            <h2>Arquitetura Completa</h2>
 
             <div class="bullet-grid">
                 <div>
-                    <h3>Stack:</h3>
-                    <div class="code-block">🔧 Seu Código
-    ↓
-💻 Continue (VSCode) ← Autocomplete
-    ↓
-🌐 Open WebUI ← Interface Web
-    ↓
-⚡ CLIs + Scripts ← Automação
-    ↓
-🚀 Ollama ← Engine
-    ↓
-🤖 Qwen2.5-Coder/Qwen3Coder ← Modelo</div>
+                    <div class="code-block">┌─────────────────────────┐
+│   💻 Continue (VSCode)  │
+│   Autocomplete em tempo │
+│   real no seu código    │
+└──────────┬──────────────┘
+           │ HTTP REST API
+           │ localhost:11434
+┌──────────▼──────────────┐
+│   🌐 Open WebUI         │
+│   Interface web chat    │
+│   http://localhost:8080 │
+└──────────┬──────────────┘
+┌──────────▼──────────────┐
+│   ⚡ CLIs & Scripts     │
+│   Claude, Codex, Forge  │
+│   Automação terminal    │
+└──────────┬──────────────┘
+           │ API OpenAI-compatible
+┌──────────▼──────────────┐
+│   🚀 Ollama Engine      │
+│   Port: 11434           │
+│   API: /v1/chat         │
+│   Models: ~/.ollama/    │
+└──────────┬──────────────┘
+┌──────────▼──────────────┐
+│   🤖 Modelo LLM         │
+│   Qwen2.5-Coder (7B)    │
+│   GPU/CPU Processing    │
+└─────────────────────────┘</div>
                 </div>
                 <div>
-                    <h3>Fluxo:</h3>
+                    <h3>Comunicação:</h3>
                     <ul class="bullet-list">
-                        <li><span class="highlight">Desenvolvimento:</span> Continue no VSCode</li>
-                        <li><span class="highlight">Chat/Research:</span> Open WebUI no navegador</li>
-                        <li><span class="highlight">Automação:</span> CLIs em scripts</li>
-                        <li><span class="highlight">Tudo local:</span> Ollama gerencia os modelos</li>
+                        <li><span class="highlight">Protocolo:</span> REST API (OpenAI-compatible)</li>
+                        <li><span class="highlight">Endpoint:</span> http://localhost:11434/v1/chat/completions</li>
+                        <li><span class="highlight">Modelos:</span> Armazenados em ~/.ollama/models/</li>
+                        <li><span class="highlight">Processamento:</span> GPU (CUDA/ROCm) ou CPU</li>
                     </ul>
+
+                    <h3>Fluxo de Dados:</h3>
+                    <div class="demo-section">
+                        <h4>1. Você escreve código/prompt</h4>
+                        <p>↓</p>
+                        <h4>2. Cliente envia para Ollama (porta 11434)</h4>
+                        <p>↓</p>
+                        <h4>3. Ollama carrega modelo na RAM/VRAM</h4>
+                        <p>↓</p>
+                        <h4>4. Inferência no modelo (GPU/CPU)</h4>
+                        <p>↓</p>
+                        <h4>5. Resposta volta para o cliente</h4>
+                    </div>
                 </div>
             </div>
 
 
         </div>
 
-        <!-- Slide 19: Casos de Uso -->
-        <div class="slide">
-            <h2>Casos de Uso Avançados</h2>
-            <div class="subtitle">"Indo além do básico"</div>
-
-            <div class="bullet-grid">
-                <div>
-                    <h3>Automações Reais:</h3>
-                    <ul class="bullet-list">
-                        <li><span class="highlight">Code Generation:</span> Gerar boilerplates</li>
-                        <li><span class="highlight">Bug Detection:</span> Análise automática</li>
-                        <li><span class="highlight">Documentation:</span> Docs que se atualizam</li>
-                        <li><span class="highlight">Code Migration:</span> Refactor inteligente</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3>Pipeline Completo:</h3>
-                    <div class="code-block"># Workflow integrado
-continue generate component
-gemini document --update
-claude review --security
-qwen-coder optimize --performance</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 20: Obrigado -->
+        <!-- Slide 19: Obrigado -->
         <div class="slide">
             <h1>Obrigado!</h1>
             <div class="subtitle">Perguntas?</div>
@@ -1107,7 +1164,7 @@ qwen-coder optimize --performance</div>
 
     <!-- Slide Counter -->
     <div class="slide-counter">
-        <span id="current-slide">1</span> / <span id="total-slides">20</span>
+        <span id="current-slide">1</span> / <span id="total-slides">19</span>
     </div>
 
     <script>
