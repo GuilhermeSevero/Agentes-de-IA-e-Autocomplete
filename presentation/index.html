@@ -861,10 +861,61 @@ models:
             </div>
         </div>
 
-        <!-- Slide 14: CLIs -->
+        <!-- Slide 13.5: Instalação Open WebUI -->
         <div class="slide">
-            <h2>CLIs que Potencializam</h2>
-            <div class="subtitle">"Linha de comando turbinada"</div>
+            <h2>Instalando Open WebUI</h2>
+
+            <div class="bullet-grid">
+                <div>
+                    <h3>Opção 1: Standalone</h3>
+                    <p style="font-size: 1.2rem; margin-bottom: 12px; color: #475569;">Use quando já tiver Ollama instalado separadamente</p>
+
+                    <div class="code-block"># Standalone (conecta ao Ollama externo)
+docker run -d \
+  -p 3000:8080 \
+  --add-host=host.docker.internal:host-gateway \
+  -v open-webui:/app/backend/data \
+  --name open-webui \
+  --restart always \
+  ghcr.io/open-webui/open-webui:main
+
+# Acesse: http://localhost:3000
+                    </div>
+
+                    <ul class="bullet-list">
+                        <li><span class="highlight">Porta 3000:</span> Interface web</li>
+                        <li><span class="highlight">host-gateway:</span> Conecta ao Ollama do host</li>
+                        <li><span class="highlight">Volume:</span> Persiste conversas e configs</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>Opção 2: Bundle com Ollama</h3>
+                    <p style="font-size: 1.2rem; margin-bottom: 12px; color: #475569;">Tudo em um único container (GPU required)</p>
+
+                    <div class="code-block"># Bundle: Ollama + Open WebUI
+docker run -d \
+  -p 3000:8080 \
+  --gpus=all \
+  -v ollama:/root/.ollama \
+  -v open-webui:/app/backend/data \
+  --name open-webui \
+  --restart always \
+  ghcr.io/open-webui/open-webui:ollama
+                    </div>
+
+                    <ul class="bullet-list">
+                        <li><span class="highlight">--gpus=all:</span> Acesso à GPU</li>
+                        <li><span class="highlight">2 volumes:</span> Modelos + dados</li>
+                        <li><span class="highlight">Tudo-em-um:</span> Não precisa Ollama separado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: CLIs -->
+        <div class="slide">
+            <h2>Agentes de IA via Terminal</h2>
+            <div class="subtitle">"Seu assistente inteligente na linha de comando"</div>
 
             <div class="bullet-grid">
                 <div>
@@ -886,7 +937,7 @@ models:
             </div>
         </div>
 
-        <!-- Slide 15: CLIs Oficiais (Claude & Codex) -->
+        <!-- Slide 16: CLIs Oficiais (Claude & Codex) -->
         <div class="slide">
             <h2>Claude Code & Codex</h2>
 
@@ -942,7 +993,7 @@ codex -c model_provider=ollama -m gpt-oss:20b</div>
 
         </div>
 
-        <!-- Slide 16: CLIs Open Source (Gemini & QwenCode) -->
+        <!-- Slide 17: CLIs Open Source (Gemini & QwenCode) -->
         <div class="slide">
             <h2>Gemini & QwenCode</h2>
 
@@ -999,7 +1050,7 @@ qwen</div>
             </div>
         </div>
 
-        <!-- Slide 17: Forge Code -->
+        <!-- Slide 18: Forge Code -->
         <div class="slide">
             <h2>Forge Code</h2>
 
@@ -1054,7 +1105,7 @@ OPENAI_API_KEY=your_provider_api_key
             </div>
         </div>
 
-        <!-- Slide 18: Arquitetura -->
+        <!-- Slide 19: Arquitetura -->
         <div class="slide">
             <h2>Arquitetura Completa</h2>
 
@@ -1117,7 +1168,7 @@ OPENAI_API_KEY=your_provider_api_key
 
         </div>
 
-        <!-- Slide 19: Obrigado -->
+        <!-- Slide 20: Obrigado -->
         <div class="slide">
             <h1>Obrigado!</h1>
             <div class="subtitle">Perguntas?</div>
@@ -1164,7 +1215,7 @@ OPENAI_API_KEY=your_provider_api_key
 
     <!-- Slide Counter -->
     <div class="slide-counter">
-        <span id="current-slide">1</span> / <span id="total-slides">19</span>
+        <span id="current-slide">1</span> / <span id="total-slides">20</span>
     </div>
 
     <script>
