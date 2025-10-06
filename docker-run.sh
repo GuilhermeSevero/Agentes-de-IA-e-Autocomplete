@@ -1,0 +1,1 @@
+docker run --rm --device /dev/kfd --device /dev/dri -e HSA_OVERRIDE_GFX_VERSION="10.3.0" -e HCC_AMDGPU_TARGET="gfx1030" -e OLLAMA_CONTEXT_LENGTH=4096 -e OLLAMA_FLASH_ATTENTION=1 -e OLLAMA_KEEP_ALIVE="30m" -e OLLAMA_KV_CACHE_TYPE="f16" -e OLLAMA_MAX_LOADED_MODELS=1 -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama:rocm

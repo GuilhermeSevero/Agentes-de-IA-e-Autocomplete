@@ -1,0 +1,41 @@
+name: my-local-configuration
+version: 0.0.1
+schema: v1
+
+models:
+  - name: "Open WebUI"
+    model: "AUTODETECT"
+    provider: "openai"
+    apiKey: sk-...
+    apiBase: "http://localhost:3000/api"
+    # apiBase: "https://ngrok-URL/api"
+    # requestOptions:
+    #   headers:
+    #     ngrok-skip-browser-warning: "true"
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete
+
+  - name: "Ollama Local"
+    model: "AUTODETECT"
+    provider: "ollama"
+    roles:
+      - chat
+      - edit
+      - apply
+      - autocomplete
+
+context:
+  - provider: "open"
+  - provider: "diff"
+  - provider: "code"
+  - provider: "currentFile"
+  - provider: "terminal"
+  - provider: "web"
+    params:
+      n: 5
+  - provider: "folder"
+  - provider: "tree"
+  - provider: "problems"

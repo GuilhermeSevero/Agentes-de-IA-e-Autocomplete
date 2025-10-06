@@ -1,0 +1,12 @@
+Create a PR description for the differences between the current branch and origin/main, following the following template (in pt-BR):
+
+---
+
+## O que é
+[Business Impact]
+
+## O que foi feito
+[Technical Changes]
+
+## Débito técnico
+[Technical Debt (if any)]

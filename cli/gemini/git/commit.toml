@@ -1,0 +1,10 @@
+# In: ~/.gemini/commands/git/commit.toml
+# Invoked via: /git:commit"
+
+description = "Generates a Single Line Message for a commit"
+prompt = """
+Create a single line commit message based on the following git diff:
+
+```diff
+!{git diff}
+"""
