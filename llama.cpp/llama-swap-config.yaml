@@ -1,0 +1,170 @@
+# llama-swap YAML configuration
+
+# Configurações globais
+healthCheckTimeout: 300
+logLevel: info
+startPort: 10001
+
+# Macros para reutilização
+macros:
+  llama-server: "./llama.cpp/build/bin/llama-server"
+
+# Modelos disponíveis
+models:
+  # Modelo 1: Qwen3-Coder-30B-A3B-Instruct
+  "qwen3-coder-30b":
+    name: "Qwen3-Coder-30B-A3B-Instruct"
+    description: "Modelo de codificação de 30B parâmetros com instruções otimizadas"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF:UD-Q4_K_XL
+      --alias unsloth/qwen3-coder-30b-a3b
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers 26
+      --ctx-size 65536
+      --temp 0.7
+      --top-k 20
+      --min-p 0.00
+      --top-p 0.8
+      --repeat-penalty 1.05
+      --flash-attn on
+      --cache-type-k q4_0
+      --cache-type-v q4_0
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "qwen3-coder-30b-a3b"
+      - "unsloth/qwen3-coder-30b-a3b"
+    checkEndpoint: "/health"
+    ttl: 3600  # 1 hora de TTL
+
+  # Modelo 2: Qwen3-4B-Thinking-2507
+  "qwen3-4b-thinking":
+    name: "Qwen3-4B-Thinking-2507"
+    description: "Modelo de raciocínio de 4B parâmetros otimizado para pensamento"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/Qwen3-4B-Thinking-2507-GGUF:UD-Q8_K_XL
+      --alias unsloth/qwen3-4b-thinking-2507
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers -1
+      --ctx-size 32768
+      --temp 0.6
+      --top-k 20
+      --min-p 0.00
+      --top-p 0.95
+      --presence-penalty 1.0
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "qwen3-4b-thinking-2507"
+      - "unsloth/qwen3-4b-thinking-2507"
+    checkEndpoint: "/health"
+    ttl: 1800  # 30 minutos de TTL
+
+  # Modelo 3: GPT-OSS-20B
+  "gpt-oss-20b":
+    name: "GPT-OSS 20B"
+    description: "Modelo GPT OSS de 20B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/gpt-oss-20b-GGUF:UD-Q4_K_XL
+      --alias unsloth/gpt-oss-20b
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers 20
+      --ctx-size 65536
+      --flash-attn on
+      --cache-type-k f16
+      --cache-type-v f16
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "gpt-oss-20b"
+      - "unsloth/gpt-oss-20b"
+    checkEndpoint: "/health"
+    ttl: 2400  # 40 minutos de TTL
+
+  # Modelo 4: Gemma 3 4B it
+  "gemma-3-4b-it":
+    name: "Gemma 3 4B it"
+    description: "Modelo Gemma 3 4B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/gemma-3-4b-it-GGUF:UD-Q8_K_XL
+      --alias unsloth/gemma-3-4b-it
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers -1
+      --ctx-size 16384
+      --seed 3407
+      --prio 2
+      --temp 1.0
+      --repeat-penalty 1.0
+      --min-p 0.01
+      --top-k 64
+      --top-p 0.95
+      --flash-attn on
+      --cache-type-k f16
+      --cache-type-v f16
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "gemma-3-4b-it"
+      - "unsloth/gemma-3-4b-it"
+    checkEndpoint: "/health"
+    ttl: 2400  # 40 minutos de TTL
+
+# Grupos para controle de swap (opcional)
+groups:
+  "coding-models":
+    swap: true      # Apenas um modelo por vez neste grupo
+    exclusive: true # Descarrega outros grupos quando ativo
+    members:
+      - "qwen3-coder-30b"
+      - "qwen3-4b-thinking"
+      - "gpt-oss-20b"
+      - "gemma-3-4b-it"
+
+# Hooks para pré-carregamento (opcional)
+hooks:
+  on_startup:
+    preload:
+      - "gemma-3-4b-it"

@@ -1,0 +1,27 @@
+# In: ~/.gemini/commands/git/pull-request.toml
+# Invoked via: /git:pull-request origin/hml
+
+description = "Generates a Pull Request Description based on Diff for a given Branch"
+prompt = """
+First:
+Execute a git diff between the current local branch and <branch_name>
+
+After:
+Crie uma descrição de Pull Request para as diferenças da branch atual com <branch_name>, seguindo o seguinte template (em pt-BR):
+
+---
+
+## O que é
+[Descrição voltada para negócio]
+
+## O que foi feito
+[Descrição técnica das modificações]
+
+## Débito técnico
+[Débitos se houver]
+---
+
+## Expected Format
+The command follows this format: `/git:pull-request <branch_name>`
+- `<branch_name>` is the target branch name that you must execute the diff.
+"""

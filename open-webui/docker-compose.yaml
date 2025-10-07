@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui:/app/backend/data
+    environment:
+      - ENV=dev
+      - AIOHTTP_CLIENT_TIMEOUT=12000 # Impacts connections to Ollama and OpenAI endpoints.
+      - BYPASS_MODEL_ACCESS_CONTROL=True # All users (and admins alike) have access to all models, regardless of the model's privacy setting (Private, Public, Shared with certain groups). This is useful for smaller or individual Open WebUI installations where model access restrictions may not be needed.
+      # - WEBUI_AUTH=False
+    networks:
+      - default
+    restart: always
+
+  kilocode-proxy:
+    image: node:20-slim
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    command: node /app/kilocode-proxy.js
+
+  ngrok:
+    network_mode: host
+    stdin_open: true
+    tty: true
+    environment:
+      - NGROK_AUTHTOKEN=<your-ngrok-token>
+    image: ngrok/ngrok:latest
+    command: http --url=ngrok-URL 3000
+
+volumes:
+  open-webui:
+    external: true
+
+networks:
+  default:
