@@ -11,7 +11,7 @@ macros:
 
 # Modelos disponíveis
 models:
-  # Modelo 1: Qwen3-Coder-30B-A3B-Instruct
+  # Modelo: Qwen3-Coder-30B-A3B-Instruct
   "qwen3-coder-30b":
     name: "Qwen3-Coder-30B-A3B-Instruct"
     description: "Modelo de codificação de 30B parâmetros com instruções otimizadas"
@@ -47,7 +47,43 @@ models:
     checkEndpoint: "/health"
     ttl: 3600  # 1 hora de TTL
 
-  # Modelo 2: Qwen3-4B-Thinking-2507
+  # Modelo: Qwen3-4B-Instruct-2507
+  "qwen3-4b-instruct":
+    name: "Qwen3-4B-Instruct-2507"
+    description: "Modelo de 4B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/Qwen3-4B-Instruct-2507-GGUF:UD-Q8_K_XL
+      --alias unsloth/qwen3-4b-instruct-2507
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers -1
+      --ctx-size 131072
+      --temp 0.7
+      --top-k 20
+      --min-p 0.00
+      --top-p 0.8
+      --presence-penalty 1.0
+      --flash-attn on
+      --cache-type-k f16
+      --cache-type-v f16
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "qwen3-4b-instruct-2507"
+      - "unsloth/qwen3-4b-instruct-2507"
+    checkEndpoint: "/health"
+    ttl: 3600  # 1 hora de TTL
+
+  # Modelo: Qwen3-4B-Thinking-2507
   "qwen3-4b-thinking":
     name: "Qwen3-4B-Thinking-2507"
     description: "Modelo de raciocínio de 4B parâmetros otimizado para pensamento"
@@ -66,8 +102,8 @@ models:
       --top-p 0.95
       --presence-penalty 1.0
       --flash-attn on
-      --cache-type-k q8_0
-      --cache-type-v q8_0
+      --cache-type-k f16
+      --cache-type-v f16
       --batch-size 2048
       --ubatch-size 512
       --threads 14
@@ -83,7 +119,7 @@ models:
     checkEndpoint: "/health"
     ttl: 1800  # 30 minutos de TTL
 
-  # Modelo 3: GPT-OSS-20B
+  # Modelo: GPT-OSS-20B
   "gpt-oss-20b":
     name: "GPT-OSS 20B"
     description: "Modelo GPT OSS de 20B parâmetros"
@@ -95,7 +131,7 @@ models:
       --port ${PORT}
       --jinja
       --n-gpu-layers 20
-      --ctx-size 65536
+      --ctx-size 131072
       --flash-attn on
       --cache-type-k f16
       --cache-type-v f16
@@ -114,9 +150,85 @@ models:
     checkEndpoint: "/health"
     ttl: 2400  # 40 minutos de TTL
 
-  # Modelo 4: Gemma 3 4B it
+  # Modelo: Gemma 3 27B it
+  "gemma-3-27b-it":
+    name: "Gemma3-27B-it"
+    description: "Modelo Gemma 3 27B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/gemma-3-27b-it-GGUF:UD-Q4_K_XL
+      --alias unsloth/gemma-3-27b-it
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers 36
+      --ctx-size 4096
+      --seed 3407
+      --prio 2
+      --temp 1.0
+      --repeat-penalty 1.0
+      --min-p 0.01
+      --top-k 64
+      --top-p 0.95
+      --flash-attn on
+      --cache-type-k f16
+      --cache-type-v f16
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "gemma-3-27b-it"
+      - "unsloth/gemma-3-27b-it"
+    checkEndpoint: "/health"
+    ttl: 2400  # 40 minutos de TTL
+
+  # Modelo: Gemma 3 12B it
+  "gemma-3-12b-it":
+    name: "Gemma3-12B-it"
+    description: "Modelo Gemma 3 12B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/gemma-3-12b-it-GGUF:UD-Q4_K_XL
+      --alias unsloth/gemma-3-12b-it
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers -1
+      --ctx-size 16384
+      --seed 3407
+      --prio 2
+      --temp 1.0
+      --repeat-penalty 1.0
+      --min-p 0
+      --top-k 64
+      --top-p 0.95
+      --flash-attn on
+      --cache-type-k f16
+      --cache-type-v f16
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "gemma-3-12b-it"
+      - "unsloth/gemma-3-12b-it"
+    checkEndpoint: "/health"
+    ttl: 2400  # 40 minutos de TTL
+
+  # Modelo: Gemma 3 4B it
   "gemma-3-4b-it":
-    name: "Gemma 3 4B it"
+    name: "Gemma3-4B-it"
     description: "Modelo Gemma 3 4B parâmetros"
     cmd: |
       ${llama-server}
@@ -152,6 +264,102 @@ models:
     checkEndpoint: "/health"
     ttl: 2400  # 40 minutos de TTL
 
+  # Modelo: MedGemma 4B it
+  "medgemma-4b-it":
+    name: "MedGemma-4B-it"
+    description: "Modelo MedGemma 4B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/medgemma-4b-it-GGUF:UD-Q4_K_XL
+      --alias unsloth/medgemma-4b-it
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers -1
+      --ctx-size 16384
+      --flash-attn on
+      --cache-type-k f16
+      --cache-type-v f16
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "medgemma-4b-it"
+      - "unsloth/medgemma-4b-it"
+    checkEndpoint: "/health"
+    ttl: 2400  # 40 minutos de TTL
+
+  # Modelo: LFM2-8B-A1B
+  "lfm22-8b-a1b":
+    name: "LFM2-8B-A1B"
+    description: "Modelo LFM2 de 8B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/LFM2-8B-A1B-GGUF:UD-Q8_K_XL
+      --alias unsloth/lfm22-8b-a1b
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers -1
+      --ctx-size 32768
+      --temp 0.3
+      --min-p 0.15
+      --repeat-penalty 1.05
+      --flash-attn on
+      --cache-type-k f16
+      --cache-type-v f16
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "lfm22-8b-a1b"
+      - "unsloth/lfm22-8b-a1b"
+    checkEndpoint: "/health"
+    ttl: 2400  # 40 minutos de TTL
+
+  # Modelo: apriel-1.5-15b-thinker
+  "apriel-1.5-15b-thinker":
+    name: "Apriel-1.5-15b-Thinker"
+    description: "Modelo Apriel de 15B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/Apriel-1.5-15b-Thinker-GGUF:UD-Q4_K_XL
+      --alias unsloth/apriel-1.5-15b-thinker
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers 46
+      --ctx-size 32768
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "apriel-1.5-15b-thinker"
+      - "unsloth/apriel-1.5-15b-thinker"
+    checkEndpoint: "/health"
+    ttl: 2400  # 40 minutos de TTL
+
 # Grupos para controle de swap (opcional)
 groups:
   "coding-models":
@@ -159,9 +367,15 @@ groups:
     exclusive: true # Descarrega outros grupos quando ativo
     members:
       - "qwen3-coder-30b"
+      - "qwen3-4b-instruct"
       - "qwen3-4b-thinking"
       - "gpt-oss-20b"
+      - "gemma-3-27b-it"
+      - "gemma-3-12b-it"
       - "gemma-3-4b-it"
+      - "medgemma-4b-it"
+      - "lfm22-8b-a1b"
+      - "apriel-1.5-15b-thinker"
 
 # Hooks para pré-carregamento (opcional)
 hooks:
