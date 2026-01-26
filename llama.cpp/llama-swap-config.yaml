@@ -47,6 +47,78 @@ models:
     checkEndpoint: "/health"
     ttl: 3600  # 1 hora de TTL
 
+  # Modelo: Qwen3-14B
+  "qwen3-14b":
+    name: "Qwen3-14B"
+    description: "Modelo de 14B parâmetros com instruções otimizadas"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/Qwen3-14B-GGUF:UD-Q4_K_XL
+      --alias unsloth/qwen3-14b
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers -1
+      --ctx-size 40960
+      --temp 0.7
+      --top-k 20
+      --min-p 0.00
+      --top-p 0.8
+      --presence-penalty 1.0
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "qwen3-14b"
+      - "unsloth/qwen3-14b"
+    checkEndpoint: "/health"
+    ttl: 3600  # 1 hora de TTL
+
+  # Modelo: Qwen3-8B
+  "qwen3-8b":
+    name: "Qwen3-8B"
+    description: "Modelo de 8B parâmetros com instruções otimizadas"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/Qwen3-8B-GGUF:UD-Q4_K_XL
+      --alias unsloth/qwen3-8b
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers -1
+      --ctx-size 32768
+      --temp 0.7
+      --top-k 20
+      --min-p 0.00
+      --top-p 0.8
+      --presence-penalty 1.0
+      --flash-attn on
+      --cache-type-k q8_0
+      --cache-type-v q8_0
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "qwen3-8b"
+      - "unsloth/qwen3-8b"
+    checkEndpoint: "/health"
+    ttl: 3600  # 1 hora de TTL
+
   # Modelo: Qwen3-4B-Instruct-2507
   "qwen3-4b-instruct":
     name: "Qwen3-4B-Instruct-2507"
@@ -147,6 +219,41 @@ models:
     aliases:
       - "gpt-oss-20b"
       - "unsloth/gpt-oss-20b"
+    checkEndpoint: "/health"
+    ttl: 2400  # 40 minutos de TTL
+
+  # Modelo: GLM 4.7 - Flash
+  "glm-4.7-flash":
+    name: "GLM 4.7 - Flash"
+    description: "Modelo GLM 4.7 Flash de 30B parâmetros"
+    cmd: |
+      ${llama-server}
+      -hf unsloth/GLM-4.7-Flash-GGUF:UD-Q4_K_XL
+      --alias unsloth/glm-4.7-flash
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --n-gpu-layers 20
+      --ctx-size 131072
+      --flash-attn on
+      --temp 1.0
+      --top-p 0.95
+      --min-p 0.01
+      --fit on
+      --cache-type-k q4_0
+      --cache-type-v q4_0
+      --batch-size 2048
+      --ubatch-size 512
+      --threads 14
+      --threads-batch 14
+      --cont-batching
+      --split-mode none
+      --main-gpu 0
+      --no-mmap
+    proxy: "http://localhost:${PORT}"
+    aliases:
+      - "glm-4.7-flash"
+      - "unsloth/glm-4.7-flash"
     checkEndpoint: "/health"
     ttl: 2400  # 40 minutos de TTL
 
@@ -264,52 +371,22 @@ models:
     checkEndpoint: "/health"
     ttl: 2400  # 40 minutos de TTL
 
-  # Modelo: MedGemma 4B it
-  "medgemma-4b-it":
-    name: "MedGemma-4B-it"
-    description: "Modelo MedGemma 4B parâmetros"
-    cmd: |
-      ${llama-server}
-      -hf unsloth/medgemma-4b-it-GGUF:UD-Q4_K_XL
-      --alias unsloth/medgemma-4b-it
-      --host 0.0.0.0
-      --port ${PORT}
-      --jinja
-      --n-gpu-layers -1
-      --ctx-size 16384
-      --flash-attn on
-      --cache-type-k f16
-      --cache-type-v f16
-      --batch-size 2048
-      --ubatch-size 512
-      --threads 14
-      --threads-batch 14
-      --cont-batching
-      --split-mode none
-      --main-gpu 0
-      --no-mmap
-    proxy: "http://localhost:${PORT}"
-    aliases:
-      - "medgemma-4b-it"
-      - "unsloth/medgemma-4b-it"
-    checkEndpoint: "/health"
-    ttl: 2400  # 40 minutos de TTL
-
   # Modelo: LFM2-8B-A1B
   "lfm22-8b-a1b":
-    name: "LFM2-8B-A1B"
-    description: "Modelo LFM2 de 8B parâmetros"
+    name: "LFM2.5-1.2B-Instruct"
+    description: "Modelo LFM2.5 de 1.2B parâmetros"
     cmd: |
       ${llama-server}
-      -hf unsloth/LFM2-8B-A1B-GGUF:UD-Q8_K_XL
-      --alias unsloth/lfm22-8b-a1b
+      -hf LiquidAI/LFM2.5-1.2B-Instruct-GGUF:Q4_K_M
+      --alias liquidai/lfm2.5-1.2b-instruct
       --host 0.0.0.0
       --port ${PORT}
       --jinja
       --n-gpu-layers -1
       --ctx-size 32768
-      --temp 0.3
-      --min-p 0.15
+      --temp 0.1
+      --top-k 50
+      --top-p 0.1
       --repeat-penalty 1.05
       --flash-attn on
       --cache-type-k f16
@@ -324,39 +401,8 @@ models:
       --no-mmap
     proxy: "http://localhost:${PORT}"
     aliases:
-      - "lfm22-8b-a1b"
-      - "unsloth/lfm22-8b-a1b"
-    checkEndpoint: "/health"
-    ttl: 2400  # 40 minutos de TTL
-
-  # Modelo: apriel-1.5-15b-thinker
-  "apriel-1.5-15b-thinker":
-    name: "Apriel-1.5-15b-Thinker"
-    description: "Modelo Apriel de 15B parâmetros"
-    cmd: |
-      ${llama-server}
-      -hf unsloth/Apriel-1.5-15b-Thinker-GGUF:UD-Q4_K_XL
-      --alias unsloth/apriel-1.5-15b-thinker
-      --host 0.0.0.0
-      --port ${PORT}
-      --jinja
-      --n-gpu-layers 46
-      --ctx-size 32768
-      --flash-attn on
-      --cache-type-k q8_0
-      --cache-type-v q8_0
-      --batch-size 2048
-      --ubatch-size 512
-      --threads 14
-      --threads-batch 14
-      --cont-batching
-      --split-mode none
-      --main-gpu 0
-      --no-mmap
-    proxy: "http://localhost:${PORT}"
-    aliases:
-      - "apriel-1.5-15b-thinker"
-      - "unsloth/apriel-1.5-15b-thinker"
+      - "lfm2.5-1.2b-instruct"
+      - "liquidai/lfm2.5-1.2b-instruct"
     checkEndpoint: "/health"
     ttl: 2400  # 40 minutos de TTL
 
@@ -367,15 +413,16 @@ groups:
     exclusive: true # Descarrega outros grupos quando ativo
     members:
       - "qwen3-coder-30b"
+      - "qwen3-14b"
+      - "qwen3-8b"
       - "qwen3-4b-instruct"
       - "qwen3-4b-thinking"
       - "gpt-oss-20b"
+      - "glm-4.7-flash"
       - "gemma-3-27b-it"
       - "gemma-3-12b-it"
       - "gemma-3-4b-it"
-      - "medgemma-4b-it"
-      - "lfm22-8b-a1b"
-      - "apriel-1.5-15b-thinker"
+      - "lfm2.5-1.2b-instruct"
 
 # Hooks para pré-carregamento (opcional)
 hooks:
